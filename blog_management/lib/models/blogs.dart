@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 
 class Blog {
@@ -15,7 +16,16 @@ class Blog {
   @override
   String toString(){
     return title ?? '';
+    
   }
+
+  factory Blog.fromJson(Map<String, dynamic> json) {
+    return  Blog(
+      id: json['id'],
+      title: json['title'],
+      body: json['body']
+    );
+  } 
 
   // Function to fetch the blogs
   static Future<List<Blog>?> fetchBlogs({int limit = 1, int page = 1,
@@ -26,15 +36,7 @@ class Blog {
 
     if (response.statusCode == 200){
       // Create the list of blogs
-      List<Blog> blogs = [];
-
-      for (var data in response.data){
-        blogs.add(Blog(
-          id: data['id'],
-          title: data['title'],
-          body: data['body']
-        ));
-      }
+      List<Blog> blogs = List.from(response.data.map((blog) => Blog.fromJson(blog)));
 
       // Simulate the search filter
       blogs = blogs.where((Blog blog) =>

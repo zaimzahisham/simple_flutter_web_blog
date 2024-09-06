@@ -33,7 +33,7 @@ class _BlogListState extends State<BlogList> {
       }
     }
 
-    pageCounterCubit.updateMaxCounter(blogs!.length);
+    pageCounterCubit.updateMaxCounter(99);
   }
 
   @override
@@ -157,17 +157,9 @@ class _BlogListState extends State<BlogList> {
                       );
                     } 
                   ),
-                  // create previous, first two, last two, and next buttons such as < 1 2 ... 8 9 >
                   BlocBuilder<PageCounterCubit, int>(
                     bloc: pageCounterCubit,
                     builder: (BuildContext context, int counter) {
-                      List<int> pageNumbers = List.generate(pageCounterCubit.maxCounter, (index) => index + 1);
-                      List<int> displayPageNumbers;
-                      if(pageNumbers.length > 5){
-                        displayPageNumbers = [1, 2, pageCounterCubit.maxCounter-1, pageCounterCubit.maxCounter];
-                      }else{
-                        displayPageNumbers = pageNumbers;
-                      }
                       return Container(
                         padding: const EdgeInsets.all(10),
                         height: ScreenSize.screenHeight! * 0.075,
@@ -178,39 +170,27 @@ class _BlogListState extends State<BlogList> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                              style: IconButton.styleFrom(backgroundColor: Color.fromRGBO(240, 239, 244, 1),),
+                              style: IconButton.styleFrom(backgroundColor: const Color.fromRGBO(240, 239, 244, 1),),
                               icon: const Icon(Icons.chevron_left,),
                               onPressed: () {
                                 pageCounterCubit.back();
                                 fetchBlogs();
                               },
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, right: 10),
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(240, 239, 244, 1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                children: [
-                                  for (var page in displayPageNumbers)
-                                    IconButton(
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: counter == page? Color.fromRGBO(100, 92, 230, 1) : Color.fromRGBO(240, 239, 244, 1),
-                                      ),
-                                      icon: Text( '$page', 
-                                        style: TextStyle(fontWeight: FontWeight.bold, color: counter == page? Colors.white : Colors.black),
-                                      ),
-                                      onPressed: () {
-                                        pageCounterCubit.jumpToPage(page);
-                                        fetchBlogs();
-                                      },
-                                    ),
-                                ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: (8.0)),
+                              child: IconButton(
+                                style: IconButton.styleFrom(
+                                  backgroundColor: const Color.fromRGBO(100, 92, 230, 1),
+                                ),
+                                icon: Text('$counter', 
+                                  style: const TextStyle(fontWeight: FontWeight.bold, color:Colors.white),
+                                ),
+                                onPressed: () {},
                               ),
                             ),
                             IconButton(
-                              style: IconButton.styleFrom(backgroundColor: Color.fromRGBO(240, 239, 244, 1),),
+                              style: IconButton.styleFrom(backgroundColor: const Color.fromRGBO(240, 239, 244, 1),),
                               icon: const Icon(Icons.chevron_right),
                               onPressed: () {
                                 pageCounterCubit.next();
